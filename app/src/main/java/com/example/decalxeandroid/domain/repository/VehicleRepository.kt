@@ -1,6 +1,7 @@
 package com.example.decalxeandroid.domain.repository
 
 import com.example.decalxeandroid.data.dto.*
+import com.example.decalxeandroid.domain.model.Result
 import kotlinx.coroutines.flow.Flow
 
 interface VehicleRepository {
@@ -13,7 +14,7 @@ interface VehicleRepository {
     fun getVehiclesByModel(model: String): Flow<Result<List<VehicleDto>>>
     fun searchVehicles(query: String): Flow<Result<List<VehicleDto>>>
     fun getVehicleBrands(): Flow<Result<List<String>>>
-    fun getVehicleModels(): Flow<Result<List<String>>>
+    fun getVehicleModels(): Flow<Result<List<VehicleModelDto>>>
     fun getVehiclesByYear(year: Int): Flow<Result<List<VehicleDto>>>
     fun getVehiclesByType(type: String): Flow<Result<List<VehicleDto>>>
 }

@@ -1,15 +1,19 @@
 package com.example.decalxeandroid.presentation.dashboard
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -33,70 +37,123 @@ fun MainScreen(
     val currentUser by com.example.decalxeandroid.domain.usecase.auth.GlobalAuthManager.currentUser.collectAsState()
     val currentEmployeeInfo by com.example.decalxeandroid.domain.usecase.auth.GlobalAuthManager.currentEmployeeInfo.collectAsState()
     
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "DecalXe",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                actions = {
-                    // User avatar and role indicator
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Text(
-                            text = currentEmployeeInfo?.fullName ?: currentUser?.username ?: "Khách",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        
-                        Surface(
-                            modifier = Modifier.size(32.dp),
-                            shape = CircleShape,
-                            color = MaterialTheme.colorScheme.primaryContainer
-                        ) {
-                            Box(
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = getRoleIcon(currentUser?.role),
-                                    contentDescription = "User Role",
-                                    modifier = Modifier.size(16.dp),
-                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
-                            }
-                        }
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface
+    // Modern gradient colors
+    val gradientColors = listOf(
+        Color(0xFF667eea),
+        Color(0xFF764ba2),
+        Color(0xFFf093fb)
+    )
+    
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = gradientColors,
+                    startY = 0f,
+                    endY = 300f
                 )
             )
-        },
-        bottomBar = {
-            MainBottomNavigation(
-                navController = navController,
-                currentUser = currentUser
-            )
+    ) {
+        Scaffold(
+            topBar = {
+                ModernTopAppBar(
+                    currentEmployeeInfo = currentEmployeeInfo,
+                    currentUser = currentUser
+                )
+            },
+            bottomBar = {
+                ModernBottomNavigation(
+                    navController = navController,
+                    currentUser = currentUser
+                )
+            },
+            containerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                // Content with modern card design
+                Card(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 16.dp),
+                    shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                ) {
+                    SimpleDashboardNavHost(
+                        navController = navController,
+                        onNavigateToLogin = onNavigateToLogin,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
         }
-    ) { paddingValues ->
-        SimpleDashboardNavHost(
-            navController = navController,
-            onNavigateToLogin = onNavigateToLogin,
-            modifier = Modifier.padding(paddingValues)
-        )
     }
 }
 
 
 @Composable
-fun MainBottomNavigation(
+fun ModernTopAppBar(
+    currentEmployeeInfo: com.example.decalxeandroid.domain.model.EmployeeInfo?,
+    currentUser: com.example.decalxeandroid.domain.model.User?
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = Color.Transparent,
+        shadowElevation = 0.dp
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Left side - Greeting
+            Column {
+                Text(
+                    text = getGreeting(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White.copy(alpha = 0.8f)
+                )
+                Text(
+                    text = currentEmployeeInfo?.fullName ?: currentUser?.username ?: "Khách",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            }
+            
+            // Right side - User avatar
+            Surface(
+                modifier = Modifier.size(48.dp),
+                shape = CircleShape,
+                color = Color.White.copy(alpha = 0.2f)
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = getRoleIcon(currentUser?.role),
+                        contentDescription = "User Role",
+                        modifier = Modifier.size(24.dp),
+                        tint = Color.White
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ModernBottomNavigation(
     navController: NavHostController,
     currentUser: com.example.decalxeandroid.domain.model.User?
 ) {
@@ -105,58 +162,80 @@ fun MainBottomNavigation(
     
     val bottomNavItems = getBottomNavItems(currentUser?.role)
     
-    NavigationBar(
-        containerColor = MaterialTheme.colorScheme.surface,
-        tonalElevation = 8.dp
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
-        bottomNavItems.forEach { item ->
-            val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
-            
-            NavigationBarItem(
-                icon = {
-                    Surface(
-                        shape = CircleShape,
-                        color = if (selected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
-                        modifier = Modifier.size(40.dp)
-                    ) {
-                        Box(
-                            contentAlignment = Alignment.Center
+        NavigationBar(
+            containerColor = Color.Transparent,
+            tonalElevation = 0.dp
+        ) {
+            bottomNavItems.forEach { item ->
+                val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
+                
+                NavigationBarItem(
+                    icon = {
+                        Surface(
+                            shape = CircleShape,
+                            color = if (selected) {
+                                Color(0xFF667eea)
+                            } else Color.Transparent,
+                            modifier = Modifier.size(40.dp)
                         ) {
-                            Icon(
-                                imageVector = item.icon,
-                                contentDescription = item.title,
-                                tint = if (selected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.size(20.dp)
-                            )
+                            Box(
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = item.icon,
+                                    contentDescription = item.title,
+                                    tint = if (selected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
                         }
-                    }
-                },
-                label = { 
-                    Text(
-                        item.title,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                    ) 
-                },
-                selected = selected,
-                onClick = {
-                    navController.navigate(item.route) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
+                    },
+                    label = { 
+                        Text(
+                            item.title,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = if (selected) Color(0xFF667eea) else MaterialTheme.colorScheme.onSurfaceVariant
+                        ) 
+                    },
+                    selected = selected,
+                    onClick = {
+                        navController.navigate(item.route) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    selectedTextColor = MaterialTheme.colorScheme.primary,
-                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    indicatorColor = Color.Transparent
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = Color.White,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        selectedTextColor = Color(0xFF667eea),
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        indicatorColor = Color.Transparent
+                    )
                 )
-            )
+            }
         }
+    }
+}
+
+@Composable
+fun getGreeting(): String {
+    val hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
+    return when (hour) {
+        in 5..11 -> "Chào buổi sáng"
+        in 12..17 -> "Chào buổi chiều"
+        in 18..22 -> "Chào buổi tối"
+        else -> "Chào buổi đêm"
     }
 }
 

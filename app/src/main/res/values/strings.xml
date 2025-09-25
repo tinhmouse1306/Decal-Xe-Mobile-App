@@ -1,60 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">DecalXe Pro</string>
-    <string name="app_description">Hệ thống quản lý decal xe chuyên nghiệp</string>
-    <string name="welcome_message">Chào mừng đến với DecalXe Pro</string>
-    <string name="login_title">Đăng nhập vào hệ thống</string>
-    <string name="register_title">Tạo tài khoản mới</string>
-    <string name="dashboard_title">Dashboard</string>
-    <string name="customers_title">Khách hàng</string>
-    <string name="orders_title">Đơn hàng</string>
-    <string name="vehicles_title">Xe</string>
-    <string name="services_title">Dịch vụ</string>
-    <string name="profile_title">Hồ sơ</string>
-    <string name="quick_actions_title">Thao tác nhanh</string>
-    <string name="recent_orders_title">Đơn hàng gần đây</string>
-    <string name="total_orders">Tổng đơn hàng</string>
-    <string name="total_customers">Khách hàng</string>
-    <string name="total_vehicles">Xe</string>
-    <string name="total_revenue">Doanh thu</string>
-    <string name="create_order">Tạo đơn hàng</string>
-    <string name="add_customer">Thêm khách hàng</string>
-    <string name="add_vehicle">Thêm xe</string>
-    <string name="create_service">Tạo dịch vụ</string>
-    <string name="no_orders_yet">Chưa có đơn hàng nào</string>
-    <string name="no_customers_yet">Chưa có khách hàng nào</string>
-    <string name="search_hint">Tìm kiếm...</string>
-    <string name="filter_hint">Lọc</string>
-    <string name="refresh">Làm mới</string>
-    <string name="retry">Thử lại</string>
-    <string name="error_occurred">Đã xảy ra lỗi</string>
-    <string name="loading">Đang tải...</string>
-    <string name="success">Thành công</string>
-    <string name="cancel">Hủy</string>
-    <string name="confirm">Xác nhận</string>
-    <string name="save">Lưu</string>
-    <string name="edit">Chỉnh sửa</string>
-    <string name="delete">Xóa</string>
-    <string name="add">Thêm</string>
-    <string name="create">Tạo</string>
-    <string name="view_details">Xem chi tiết</string>
-    <string name="role_access_denied">Tài khoản của bạn không có quyền truy cập ứng dụng mobile. Ứng dụng này chỉ dành cho Nhân viên Bán hàng (Sales), Kỹ thuật viên Lắp đặt (Technician) và Khách hàng (Customer).</string>
-    <string name="admin_manager_no_access">Admin và Manager không có quyền truy cập ứng dụng mobile. Họ sử dụng hệ thống quản lý trên web.</string>
-    <string name="sales_role">Nhân viên Bán hàng</string>
-    <string name="technician_role">Kỹ thuật viên Lắp đặt</string>
-    <string name="customer_role">Khách hàng</string>
-    <string name="admin_role">Quản trị viên</string>
-    <string name="manager_role">Quản lý</string>
-    <string name="role_responsibilities">Chức năng</string>
-    <string name="account_created_date">Ngày tạo tài khoản</string>
-    <string name="last_login">Lần đăng nhập cuối</string>
-    <string name="change_password">Đổi mật khẩu</string>
-    <string name="logout">Đăng xuất</string>
-    <string name="actions">Thao tác</string>
-    <string name="personal_info">Thông tin cá nhân</string>
-    <string name="account_info">Thông tin tài khoản</string>
-    <string name="username">Tên đăng nhập</string>
-    <string name="account_status">Trạng thái tài khoản</string>
-    <string name="active">Hoạt động</string>
-    <string name="inactive">Không hoạt động</string>
-    <string name="no_info_available">Chưa có thông tin</string>
+    <string name="app_name">DecalXe</string>
+    
+    <!-- Customer Form -->
+    <string name="customer_form_title">Thông tin khách hàng</string>
+    <string name="customer_first_name">Họ</string>
+    <string name="customer_last_name">Tên</string>
+    <string name="customer_phone">Số điện thoại</string>
+    <string name="customer_email">Email</string>
+    <string name="customer_address">Địa chỉ</string>
+    
+    <!-- Vehicle Form -->
+    <string name="vehicle_form_title">Thông tin xe</string>
+    <string name="vehicle_chassis_number">Số khung xe</string>
+    <string name="vehicle_license_plate">Biển số xe</string>
+    <string name="vehicle_color">Màu sắc</string>
+    <string name="vehicle_year">Năm sản xuất</string>
+    <string name="vehicle_initial_km">Số km ban đầu</string>
+    <string name="vehicle_model">Mẫu xe</string>
+    
+    <!-- Validation Messages -->
+    <string name="validation_required">Trường này là bắt buộc</string>
+    <string name="validation_invalid_email">Email không hợp lệ</string>
+    <string name="validation_invalid_phone">Số điện thoại không hợp lệ</string>
+    <string name="validation_chassis_min_length">Số khung xe phải có ít nhất 10 ký tự</string>
+    <string name="validation_license_min_length">Biển số xe phải có ít nhất 8 ký tự</string>
+    <string name="validation_year_range">Năm sản xuất phải từ 1900 đến 2024</string>
+    
+    <!-- Buttons -->
+    <string name="button_continue">Tiếp tục</string>
+    <string name="button_complete">Hoàn thành</string>
+    <string name="button_back">Quay lại</string>
+    <string name="button_retry">Thử lại</string>
+    
+    <!-- Progress -->
+    <string name="progress_step_1">Bước 1/2</string>
+    <string name="progress_step_2">Bước 2/2</string>
+    
+    <!-- Messages -->
+    <string name="welcome_add_customer">Thêm khách hàng mới</string>
+    <string name="welcome_add_vehicle">Thêm thông tin xe</string>
+    <string name="error_network">Lỗi kết nối mạng</string>
+    <string name="error_unknown">Có lỗi xảy ra</string>
+    <string name="loading_message">Đang tải dữ liệu</string>
 </resources>

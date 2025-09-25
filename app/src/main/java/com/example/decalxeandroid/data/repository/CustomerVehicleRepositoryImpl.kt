@@ -3,6 +3,7 @@ package com.example.decalxeandroid.data.repository
 import android.util.Log
 import com.example.decalxeandroid.data.api.CustomerVehicleApi
 import com.example.decalxeandroid.data.dto.CustomerVehicleDto
+import com.example.decalxeandroid.data.dto.UpdateCustomerVehicleDto
 import com.example.decalxeandroid.data.mapper.CustomerVehicleMapper
 import com.example.decalxeandroid.domain.model.CustomerVehicle
 import com.example.decalxeandroid.domain.model.Result
@@ -108,10 +109,9 @@ class CustomerVehicleRepositoryImpl(
         }
     }
 
-    override fun updateVehicle(vehicleId: String, vehicle: CustomerVehicle): Flow<Result<CustomerVehicle>> = flow {
+    override fun updateVehicle(vehicleId: String, updateDto: UpdateCustomerVehicleDto): Flow<Result<CustomerVehicle>> = flow {
         try {
-            val dto = mapper.toUpdateDto(vehicle)
-            val response = api.updateCustomerVehicle(vehicleId, dto)
+            val response = api.updateCustomerVehicle(vehicleId, updateDto)
             if (response.isSuccessful) {
                 val updatedVehicle = response.body()?.let { mapper.toDomain(it) }
                 if (updatedVehicle != null) {

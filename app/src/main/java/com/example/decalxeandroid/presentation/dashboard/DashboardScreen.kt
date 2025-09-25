@@ -19,11 +19,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.decalxeandroid.domain.model.Customer
+import com.example.decalxeandroid.domain.model.CustomerVehicle
+import com.example.decalxeandroid.presentation.customers.CustomerDetailScreen
+import com.example.decalxeandroid.presentation.customers.EditCustomerScreen
 import com.example.decalxeandroid.presentation.navigation.Screen
 import com.example.decalxeandroid.presentation.customers.CustomersScreen
 import com.example.decalxeandroid.presentation.customers.AddCustomerScreen
-import com.example.decalxeandroid.presentation.customers.CustomerDetailScreen
-import com.example.decalxeandroid.presentation.customers.CustomerEditScreen
 import com.example.decalxeandroid.presentation.orders.OrdersScreen
 import com.example.decalxeandroid.presentation.orders.OrderDetailScreen
 import com.example.decalxeandroid.presentation.orders.OrderEditScreen
@@ -287,14 +289,14 @@ fun DashboardNavHost(
                 onNavigateBack = {
                     navController.popBackStack()
                 },
-                onNavigateToVehicle = { vehicleId ->
-                    navController.navigate(Screen.VehicleDetail.createRoute(vehicleId))
+                onEditCustomer = { customer ->
+                    navController.navigate("edit_customer/${customer.customerId}")
                 },
-                onNavigateToOrder = { orderId ->
-                    navController.navigate(Screen.OrderDetail.createRoute(orderId))
+                onViewVehicleDetail = { vehicle ->
+                    navController.navigate("customer_vehicle_detail/${vehicle.vehicleID}")
                 },
-                onNavigateToEdit = { customerIdToEdit ->
-                    navController.navigate(Screen.CustomerEdit.createRoute(customerIdToEdit))
+                onAddVehicle = { customer ->
+                    navController.navigate("add_customer_vehicle/${customer.customerId}")
                 }
             )
         }
@@ -393,14 +395,17 @@ fun DashboardNavHost(
             )
         ) { backStackEntry ->
             val customerId = backStackEntry.arguments?.getString("customerId") ?: ""
-            CustomerEditScreen(
+            EditCustomerScreen(
                 customerId = customerId,
                 onNavigateBack = {
                     navController.popBackStack()
                 },
-                onNavigateToDetail = { customerIdToDetail ->
-                    navController.navigate(Screen.CustomerDetail.createRoute(customerIdToDetail)) {
-                        popUpTo(Screen.CustomerDetail.createRoute(customerIdToDetail)) { inclusive = true }
+                onCustomerUpdated = { updatedCustomer ->
+                    // Navigate back to customer detail
+                    navController.navigate("customer_detail/${updatedCustomer.customerId}") {
+                        popUpTo("customer_detail/${updatedCustomer.customerId}") {
+                            inclusive = true
+                        }
                     }
                 }
             )

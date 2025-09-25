@@ -3,6 +3,7 @@ package com.example.decalxeandroid.presentation.vehicles
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.decalxeandroid.data.dto.UpdateCustomerVehicleDto
 import com.example.decalxeandroid.domain.model.CustomerVehicle
 import com.example.decalxeandroid.domain.repository.CustomerVehicleRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -153,22 +154,18 @@ class VehicleEditViewModel(
             Log.d(TAG, "Updating vehicle: $vehicleId")
             
             try {
-                // Create CustomerVehicle object with updated data
-                val updatedVehicle = CustomerVehicle(
-                    vehicleID = vehicleId,
-                    chassisNumber = formData.chassisNumber.trim().takeIf { it.isNotEmpty() } ?: "",
-                    licensePlate = formData.licensePlate.trim(),
-                    color = formData.color.trim(),
-                    year = formData.year.trim().toIntOrNull() ?: 0,
-                    initialKM = formData.initialKM.trim().toDoubleOrNull() ?: 0.0,
-                    customerID = "", // Will be preserved by backend
-                    customerFullName = "", // Will be preserved by backend
-                    modelID = formData.modelId.trim().takeIf { it.isNotEmpty() } ?: "",
-                    vehicleModelName = null, // Will be populated by backend
-                    vehicleBrandName = null // Will be populated by backend
+                // Create UpdateCustomerVehicleDto with updated data
+                val updateDto = UpdateCustomerVehicleDto(
+                    customerID = null, // Will be preserved by backend
+                    chassisNumber = formData.chassisNumber.trim().takeIf { it.isNotEmpty() },
+                    licensePlate = formData.licensePlate.trim().takeIf { it.isNotEmpty() },
+                    color = formData.color.trim().takeIf { it.isNotEmpty() },
+                    year = formData.year.trim().toIntOrNull(),
+                    initialKM = formData.initialKM.trim().toDoubleOrNull(),
+                    modelID = formData.modelId.trim().takeIf { it.isNotEmpty() }
                 )
                 
-                customerVehicleRepository.updateVehicle(vehicleId, updatedVehicle).collect { result ->
+                customerVehicleRepository.updateVehicle(vehicleId, updateDto).collect { result ->
                     when (result) {
                         is com.example.decalxeandroid.domain.model.Result.Success -> {
                             Log.d(TAG, "Successfully updated vehicle: ${result.data.licensePlate}")

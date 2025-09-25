@@ -18,28 +18,31 @@ class AddCustomerViewModel(
     val uiState: StateFlow<AddCustomerUiState> = _uiState.asStateFlow()
     
     fun updateFirstName(firstName: String) {
+        val cleanedName = VietnameseInputUtils.cleanVietnameseText(firstName)
         val currentFormData = (uiState.value as? AddCustomerUiState.Editing)?.formData ?: CustomerFormData()
         val updatedFormData = currentFormData.copy(
-            firstName = firstName,
-            firstNameError = validateFirstName(firstName)
+            firstName = cleanedName,
+            firstNameError = validateFirstName(cleanedName)
         )
         _uiState.value = AddCustomerUiState.Editing(updatedFormData)
     }
     
     fun updateLastName(lastName: String) {
+        val cleanedName = VietnameseInputUtils.cleanVietnameseText(lastName)
         val currentFormData = (uiState.value as? AddCustomerUiState.Editing)?.formData ?: CustomerFormData()
         val updatedFormData = currentFormData.copy(
-            lastName = lastName,
-            lastNameError = validateLastName(lastName)
+            lastName = cleanedName,
+            lastNameError = validateLastName(cleanedName)
         )
         _uiState.value = AddCustomerUiState.Editing(updatedFormData)
     }
     
     fun updatePhoneNumber(phoneNumber: String) {
+        val cleanedPhone = VietnameseInputUtils.cleanVietnamesePhone(phoneNumber)
         val currentFormData = (uiState.value as? AddCustomerUiState.Editing)?.formData ?: CustomerFormData()
         val updatedFormData = currentFormData.copy(
-            phoneNumber = phoneNumber,
-            phoneNumberError = validatePhoneNumber(phoneNumber)
+            phoneNumber = cleanedPhone,
+            phoneNumberError = validatePhoneNumber(cleanedPhone)
         )
         _uiState.value = AddCustomerUiState.Editing(updatedFormData)
     }
@@ -54,10 +57,11 @@ class AddCustomerViewModel(
     }
     
     fun updateAddress(address: String) {
+        val cleanedAddress = VietnameseInputUtils.cleanVietnameseText(address)
         val currentFormData = (uiState.value as? AddCustomerUiState.Editing)?.formData ?: CustomerFormData()
         val updatedFormData = currentFormData.copy(
-            address = address,
-            addressError = validateAddress(address)
+            address = cleanedAddress,
+            addressError = validateAddress(cleanedAddress)
         )
         _uiState.value = AddCustomerUiState.Editing(updatedFormData)
     }
@@ -119,7 +123,7 @@ class AddCustomerViewModel(
     private fun validatePhoneNumber(phoneNumber: String): String? {
         return when {
             phoneNumber.isBlank() -> "Số điện thoại không được để trống"
-            !phoneNumber.matches(Regex("^[0-9]{10,11}$")) -> "Số điện thoại không hợp lệ"
+            !VietnameseInputUtils.isValidVietnamesePhone(phoneNumber) -> "Số điện thoại không hợp lệ"
             else -> null
         }
     }
@@ -128,7 +132,7 @@ class AddCustomerViewModel(
         if (email.isBlank()) return null // Email is optional
         
         return when {
-            !email.matches(Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) -> "Email không hợp lệ"
+            !VietnameseInputUtils.isValidEmail(email) -> "Email không hợp lệ"
             else -> null
         }
     }

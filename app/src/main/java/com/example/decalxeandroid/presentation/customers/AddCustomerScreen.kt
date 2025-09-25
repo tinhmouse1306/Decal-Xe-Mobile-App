@@ -1,7 +1,10 @@
 package com.example.decalxeandroid.presentation.customers
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -10,7 +13,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -39,62 +45,112 @@ fun AddCustomerScreen(
     
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Thêm khách hàng") },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Quay lại")
-                    }
-                }
+            CustomerModernTopAppBar(
+                title = "Thêm khách hàng",
+                subtitle = "Bước 1/2",
+                onNavigateBack = onNavigateBack,
+                showProgress = true,
+                progress = 0.5f
             )
         }
     ) { paddingValues ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Form Fields
-            CustomerForm(
-                uiState = uiState,
-                onFirstNameChange = { viewModel.updateFirstName(it) },
-                onLastNameChange = { viewModel.updateLastName(it) },
-                onPhoneNumberChange = { viewModel.updatePhoneNumber(it) },
-                onEmailChange = { viewModel.updateEmail(it) },
-                onAddressChange = { viewModel.updateAddress(it) },
-                onSubmit = { viewModel.createCustomer() }
-            )
-            
-            // Error Message
-            if (uiState is AddCustomerUiState.Error) {
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                // Welcome Card
+                ModernWelcomeCard()
+                
+                // Form Fields
+                CustomerForm(
+                    uiState = uiState,
+                    onFirstNameChange = { viewModel.updateFirstName(it) },
+                    onLastNameChange = { viewModel.updateLastName(it) },
+                    onPhoneNumberChange = { viewModel.updatePhoneNumber(it) },
+                    onEmailChange = { viewModel.updateEmail(it) },
+                    onAddressChange = { viewModel.updateAddress(it) },
+                    onSubmit = { viewModel.createCustomer() }
+                )
+                
+                // Error Message
+                if (uiState is AddCustomerUiState.Error) {
+                    CustomerModernErrorCard(
+                        message = (uiState as AddCustomerUiState.Error).message
                     )
-                ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            Icons.Default.Error,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.error
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = (uiState as AddCustomerUiState.Error).message,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
                 }
             }
         }
     }
 }
+
+
+@Composable
+fun ModernWelcomeCard() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        shape = RoundedCornerShape(20.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            Color(0xFF667eea),
+                            Color(0xFF764ba2),
+                            Color(0xFFf093fb)
+                        )
+                    )
+                )
+        ) {
+            Row(
+                modifier = Modifier.padding(24.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
+                        .background(Color.White.copy(alpha = 0.2f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        Icons.Default.PersonAdd,
+                        contentDescription = "Add Customer",
+                        tint = Color.White,
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
+                
+                Spacer(modifier = Modifier.width(16.dp))
+                
+                Column {
+                    Text(
+                        text = "👋 Thêm khách hàng mới",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                    Text(
+                        text = "Điền thông tin khách hàng để bắt đầu",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White.copy(alpha = 0.9f)
+                    )
+                }
+            }
+        }
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -114,132 +170,101 @@ private fun CustomerForm(
     
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+        shape = RoundedCornerShape(20.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier.padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Text(
-                text = "Thông tin khách hàng",
-                style = MaterialTheme.typography.titleLarge
-            )
+            // Header
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(
+                            brush = Brush.linearGradient(
+                                colors = listOf(
+                                    Color(0xFFf093fb),
+                                    Color(0xFFf5576c)
+                                )
+                            )
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        Icons.Default.Person,
+                        contentDescription = "Customer",
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+                
+                Text(
+                    text = "Thông tin khách hàng",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            }
             
             // First Name
-            OutlinedTextField(
+            CustomerModernOutlinedTextField(
                 value = formData.firstName,
                 onValueChange = onFirstNameChange,
-                label = { Text("Họ *") },
-                modifier = Modifier.fillMaxWidth(),
-                leadingIcon = {
-                    Icon(Icons.Default.Person, contentDescription = null)
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next
-                ),
+                label = "Họ *",
+                leadingIcon = Icons.Default.Person,
+                keyboardType = KeyboardType.Text,
                 isError = formData.firstNameError != null,
-                supportingText = {
-                    if (formData.firstNameError != null) {
-                        Text(
-                            text = formData.firstNameError,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
-                }
+                errorMessage = formData.firstNameError
             )
             
             // Last Name
-            OutlinedTextField(
+            CustomerModernOutlinedTextField(
                 value = formData.lastName,
                 onValueChange = onLastNameChange,
-                label = { Text("Tên *") },
-                modifier = Modifier.fillMaxWidth(),
-                leadingIcon = {
-                    Icon(Icons.Default.Person, contentDescription = null)
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next
-                ),
+                label = "Tên *",
+                leadingIcon = Icons.Default.Person,
+                keyboardType = KeyboardType.Text,
                 isError = formData.lastNameError != null,
-                supportingText = {
-                    if (formData.lastNameError != null) {
-                        Text(
-                            text = formData.lastNameError,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
-                }
+                errorMessage = formData.lastNameError
             )
             
             // Phone Number
-            OutlinedTextField(
+            CustomerModernOutlinedTextField(
                 value = formData.phoneNumber,
                 onValueChange = onPhoneNumberChange,
-                label = { Text("Số điện thoại *") },
-                modifier = Modifier.fillMaxWidth(),
-                leadingIcon = {
-                    Icon(Icons.Default.Phone, contentDescription = null)
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Phone,
-                    imeAction = ImeAction.Next
-                ),
+                label = "Số điện thoại *",
+                leadingIcon = Icons.Default.Phone,
+                keyboardType = KeyboardType.Phone,
                 isError = formData.phoneNumberError != null,
-                supportingText = {
-                    if (formData.phoneNumberError != null) {
-                        Text(
-                            text = formData.phoneNumberError,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
-                }
+                errorMessage = formData.phoneNumberError
             )
             
             // Email
-            OutlinedTextField(
+            CustomerModernOutlinedTextField(
                 value = formData.email,
                 onValueChange = onEmailChange,
-                label = { Text("Email") },
-                modifier = Modifier.fillMaxWidth(),
-                leadingIcon = {
-                    Icon(Icons.Default.Email, contentDescription = null)
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Next
-                ),
+                label = "Email",
+                leadingIcon = Icons.Default.Email,
+                keyboardType = KeyboardType.Email,
                 isError = formData.emailError != null,
-                supportingText = {
-                    if (formData.emailError != null) {
-                        Text(
-                            text = formData.emailError,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
-                }
+                errorMessage = formData.emailError
             )
             
             // Address
-            OutlinedTextField(
+            CustomerModernOutlinedTextField(
                 value = formData.address,
                 onValueChange = onAddressChange,
-                label = { Text("Địa chỉ") },
-                modifier = Modifier.fillMaxWidth(),
-                leadingIcon = {
-                    Icon(Icons.Default.LocationOn, contentDescription = null)
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done
-                ),
+                label = "Địa chỉ",
+                leadingIcon = Icons.Default.LocationOn,
+                keyboardType = KeyboardType.Text,
                 isError = formData.addressError != null,
-                supportingText = {
-                    if (formData.addressError != null) {
-                        Text(
-                            text = formData.addressError,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
-                }
+                errorMessage = formData.addressError,
+                maxLines = 3
             )
             
             Spacer(modifier = Modifier.height(16.dp))
@@ -248,7 +273,8 @@ private fun CustomerForm(
             Button(
                 onClick = onSubmit,
                 modifier = Modifier.fillMaxWidth(),
-                enabled = uiState !is AddCustomerUiState.Loading && formData.isValid
+                enabled = uiState !is AddCustomerUiState.Loading && formData.isValid,
+                shape = RoundedCornerShape(16.dp)
             ) {
                 if (uiState is AddCustomerUiState.Loading) {
                     CircularProgressIndicator(
@@ -257,11 +283,15 @@ private fun CustomerForm(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                 }
-                Text("Tạo khách hàng")
+                Text(
+                    text = "Tiếp tục →",
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
 }
+
 
 data class CustomerFormData(
     val firstName: String = "",

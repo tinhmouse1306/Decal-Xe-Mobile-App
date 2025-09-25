@@ -19,7 +19,9 @@ import com.example.decalxeandroid.data.repository.DecalServiceRepositoryImpl
 import com.example.decalxeandroid.data.repository.EmployeeRepositoryImpl
 import com.example.decalxeandroid.data.repository.OrderRepositoryImpl
 import com.example.decalxeandroid.data.repository.AuthRepositoryImpl
+import com.example.decalxeandroid.data.repository.VehicleRepositoryImpl
 import com.example.decalxeandroid.data.remote.AuthApiService
+import com.example.decalxeandroid.data.remote.VehicleApiService
 import com.example.decalxeandroid.data.local.TokenManager
 import com.example.decalxeandroid.domain.repository.CustomerRepository
 import com.example.decalxeandroid.domain.repository.CustomerVehicleRepository
@@ -27,6 +29,7 @@ import com.example.decalxeandroid.domain.repository.DecalServiceRepository
 import com.example.decalxeandroid.domain.repository.EmployeeRepository
 import com.example.decalxeandroid.domain.repository.OrderRepository
 import com.example.decalxeandroid.domain.repository.AuthRepository
+import com.example.decalxeandroid.domain.repository.VehicleRepository
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import okhttp3.OkHttpClient
@@ -98,6 +101,10 @@ object AppContainer {
         retrofit.create(AuthApiService::class.java)
     }
     
+    private val vehicleApiService: VehicleApiService by lazy {
+        retrofit.create(VehicleApiService::class.java)
+    }
+    
     private val tokenManager: TokenManager by lazy {
         TokenManager()
     }
@@ -154,5 +161,9 @@ object AppContainer {
     
     val authRepository: AuthRepository by lazy {
         AuthRepositoryImpl(authApiService, customerApiService, tokenManager)
+    }
+    
+    val vehicleRepository: VehicleRepository by lazy {
+        VehicleRepositoryImpl(vehicleApiService)
     }
 }

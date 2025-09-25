@@ -3,6 +3,7 @@ package com.example.decalxeandroid.data.remote
 import com.example.decalxeandroid.data.dto.VehicleDto
 import com.example.decalxeandroid.data.dto.CreateVehicleDto
 import com.example.decalxeandroid.data.dto.UpdateVehicleDto
+import com.example.decalxeandroid.data.dto.VehicleModelDto
 import retrofit2.http.*
 
 interface VehicleApiService {
@@ -39,8 +40,8 @@ interface VehicleApiService {
     @GET("${ApiConstants.VEHICLES_ENDPOINT}/brands")
     suspend fun getVehicleBrands(): List<String>
     
-    @GET("${ApiConstants.VEHICLES_ENDPOINT}/models")
-    suspend fun getVehicleModels(): List<String>
+    @GET("VehicleModels")
+    suspend fun getVehicleModels(): List<VehicleModelDto>
     
     @GET("${ApiConstants.VEHICLES_ENDPOINT}/by-year/{year}")
     suspend fun getVehiclesByYear(@Path("year") year: Int): List<VehicleDto>

@@ -1,5 +1,6 @@
 package com.example.decalxeandroid.presentation.dashboard
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,6 +15,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -115,7 +119,7 @@ fun DashboardHomeScreen(
                     )
                 }
                 
-                // Statistics Cards
+                // Statistics Cards with Modern Design
                 item {
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
@@ -124,66 +128,43 @@ fun DashboardHomeScreen(
                         modifier = Modifier.height(200.dp)
                     ) {
                         item {
-                            StatCard(
+                            ModernStatCard(
                                 title = "Tổng đơn hàng",
                                 value = uiState.totalOrders.toString(),
                                 icon = Icons.Default.ShoppingCart,
-                                color = MaterialTheme.colorScheme.primary
+                                gradientColors = listOf(Color(0xFF667eea), Color(0xFF764ba2))
                             )
                         }
                         item {
-                            StatCard(
+                            ModernStatCard(
                                 title = "Khách hàng",
                                 value = uiState.totalCustomers.toString(),
                                 icon = Icons.Default.People,
-                                color = MaterialTheme.colorScheme.secondary
+                                gradientColors = listOf(Color(0xFFf093fb), Color(0xFFf5576c))
                             )
                         }
                         item {
-                            StatCard(
+                            ModernStatCard(
                                 title = "Xe",
                                 value = uiState.totalVehicles.toString(),
                                 icon = Icons.Default.DirectionsCar,
-                                color = MaterialTheme.colorScheme.tertiary
+                                gradientColors = listOf(Color(0xFF4facfe), Color(0xFF00f2fe))
                             )
                         }
                         item {
-                            StatCard(
+                            ModernStatCard(
                                 title = "Doanh thu",
                                 value = "${uiState.totalRevenue.toInt()}₫",
                                 icon = Icons.Default.AttachMoney,
-                                color = MaterialTheme.colorScheme.primary
+                                gradientColors = listOf(Color(0xFF43e97b), Color(0xFF38f9d7))
                             )
                         }
                     }
                 }
                 
-                // Welcome message
+                // Welcome message with gradient
                 item {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer
-                        ),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(20.dp)
-                        ) {
-                            Text(
-                                text = "Chào mừng đến với DecalXe!",
-                                style = MaterialTheme.typography.headlineSmall,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Sử dụng menu để điều hướng đến các chức năng chính",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        }
-                    }
+                    ModernWelcomeCard()
                 }
                 
                 // Decal Services
@@ -196,7 +177,7 @@ fun DashboardHomeScreen(
                 }
                 
                 items(uiState.decalServices) { service ->
-                    DecalServiceCard(service = service)
+                    ModernDecalServiceCard(service = service)
                 }
             }
         }
@@ -204,85 +185,134 @@ fun DashboardHomeScreen(
 }
 
 @Composable
-fun StatCard(
+fun ModernStatCard(
     title: String,
     value: String,
     icon: ImageVector,
-    color: androidx.compose.ui.graphics.Color
+    gradientColors: List<Color>
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(12.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(90.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        shape = RoundedCornerShape(16.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = Brush.linearGradient(gradientColors)
+                )
         ) {
-            Surface(
-                modifier = Modifier.size(48.dp),
-                shape = CircleShape,
-                color = color.copy(alpha = 0.1f)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                Box(
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = title,
-                        tint = color,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
+                Icon(
+                    imageVector = icon,
+                    contentDescription = title,
+                    tint = Color.White,
+                    modifier = Modifier.size(24.dp)
+                )
+                
+                Spacer(modifier = Modifier.height(4.dp))
+                
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White.copy(alpha = 0.9f)
+                )
             }
-            
-            Spacer(modifier = Modifier.height(8.dp))
-            
-            Text(
-                text = value,
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
-            
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+        }
+    }
+}
+
+@Composable
+fun ModernWelcomeCard() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        shape = RoundedCornerShape(20.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            Color(0xFF667eea),
+                            Color(0xFF764ba2),
+                            Color(0xFFf093fb)
+                        )
+                    )
+                )
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp)
+            ) {
+                Text(
+                    text = "🎉 Chào mừng đến với DecalXe!",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Khám phá các dịch vụ decal chất lượng cao và tạo nên phong cách độc đáo cho xe của bạn",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White.copy(alpha = 0.9f)
+                )
+            }
         }
     }
 }
 
 
 @Composable
-fun DecalServiceCard(
+fun ModernDecalServiceCard(
     service: com.example.decalxeandroid.domain.model.DecalService
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        shape = RoundedCornerShape(12.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+        shape = RoundedCornerShape(16.dp)
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Surface(
-                modifier = Modifier.size(40.dp),
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.primaryContainer
+            // Modern icon with gradient background
+            Box(
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape)
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                Color(0xFF667eea),
+                                Color(0xFF764ba2)
+                            )
+                        )
+                    ),
+                contentAlignment = Alignment.Center
             ) {
-                Box(
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.DesignServices,
-                        contentDescription = "Service",
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Default.DesignServices,
+                    contentDescription = "Service",
+                    tint = Color.White,
+                    modifier = Modifier.size(28.dp)
+                )
             }
             
             Spacer(modifier = Modifier.width(16.dp))
@@ -292,9 +322,12 @@ fun DecalServiceCard(
             ) {
                 Text(
                     text = service.serviceName,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Medium
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
+                
+                Spacer(modifier = Modifier.height(4.dp))
                 
                 Text(
                     text = service.description ?: "Không có mô tả",
@@ -304,24 +337,28 @@ fun DecalServiceCard(
                     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
                 
+                Spacer(modifier = Modifier.height(8.dp))
+                
                 Text(
                     text = "${service.price.toInt()}₫",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = Color(0xFF667eea)
                 )
             }
             
+            // Modern status badge
             Surface(
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                shape = RoundedCornerShape(16.dp),
-                color = MaterialTheme.colorScheme.primary
+                shape = RoundedCornerShape(20.dp),
+                color = Color(0xFF43e97b)
             ) {
                 Text(
                     text = "Có sẵn",
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                    color = MaterialTheme.colorScheme.onPrimary
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    color = Color.White,
+                    fontWeight = FontWeight.Medium
                 )
             }
         }

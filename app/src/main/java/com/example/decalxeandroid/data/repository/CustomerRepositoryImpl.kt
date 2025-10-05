@@ -2,7 +2,6 @@ package com.example.decalxeandroid.data.repository
 
 import com.example.decalxeandroid.data.api.CustomerApi
 import com.example.decalxeandroid.data.dto.CreateCustomerDto
-import com.example.decalxeandroid.data.dto.UpdateCustomerDto
 import com.example.decalxeandroid.data.mapper.CustomerMapper
 import com.example.decalxeandroid.domain.model.Customer
 import com.example.decalxeandroid.domain.model.Result
@@ -10,11 +9,9 @@ import com.example.decalxeandroid.domain.repository.CustomerRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class CustomerRepositoryImpl(
-    private val api: CustomerApi,
-    private val mapper: CustomerMapper
-) : CustomerRepository {
-    
+class CustomerRepositoryImpl(private val api: CustomerApi, private val mapper: CustomerMapper) :
+        CustomerRepository {
+
     override fun getCustomers(): Flow<Result<List<Customer>>> = flow {
         try {
             val response = api.getCustomers()
@@ -28,7 +25,7 @@ class CustomerRepositoryImpl(
             emit(Result.Error("Network error: ${e.message}"))
         }
     }
-    
+
     override fun getCustomerById(customerId: String): Flow<Result<Customer>> = flow {
         try {
             val response = api.getCustomerById(customerId)
@@ -46,23 +43,24 @@ class CustomerRepositoryImpl(
             emit(Result.Error("Network error: ${e.message}"))
         }
     }
-    
+
     override fun createCustomer(
-        firstName: String,
-        lastName: String,
-        phoneNumber: String,
-        email: String?,
-        address: String?
+            firstName: String,
+            lastName: String,
+            phoneNumber: String,
+            email: String?,
+            address: String?
     ): Flow<Result<Customer>> = flow {
         try {
-            val createDto = CreateCustomerDto(
-                firstName = firstName,
-                lastName = lastName,
-                phoneNumber = phoneNumber,
-                email = email,
-                address = address,
-                accountID = null
-            )
+            val createDto =
+                    CreateCustomerDto(
+                            firstName = firstName,
+                            lastName = lastName,
+                            phoneNumber = phoneNumber,
+                            email = email,
+                            address = address,
+                            accountID = null
+                    )
             val response = api.createCustomer(createDto)
             if (response.isSuccessful) {
                 val customer = response.body()?.let { mapper.toDomain(it) }
@@ -78,26 +76,25 @@ class CustomerRepositoryImpl(
             emit(Result.Error("Network error: ${e.message}"))
         }
     }
-    
-    override fun updateCustomer(customerId: String, customer: Customer): Flow<Result<Customer>> = flow {
-        try {
-            val updateDto = mapper.toUpdateDto(customer)
-            val response = api.updateCustomer(customerId, updateDto)
-            if (response.isSuccessful) {
-                val updatedCustomer = response.body()?.let { mapper.toDomain(it) }
-                if (updatedCustomer != null) {
-                    emit(Result.Success(updatedCustomer))
-                } else {
-                    emit(Result.Error("Failed to update customer: Invalid response"))
+
+    override fun updateCustomer(customerId: String, customer: Customer): Flow<Result<Customer>> =
+            flow {
+                try {
+                    val updateDto = mapper.toUpdateDto(customer)
+                    val response = api.updateCustomer(customerId, updateDto)
+                    if (response.isSuccessful) {
+                        // Backend returns NoContent (204) for successful update
+                        // We return the original customer data since backend doesn't return updated
+                        // data
+                        emit(Result.Success(customer))
+                    } else {
+                        emit(Result.Error("Failed to update customer: ${response.code()}"))
+                    }
+                } catch (e: Exception) {
+                    emit(Result.Error("Network error: ${e.message}"))
                 }
-            } else {
-                emit(Result.Error("Failed to update customer: ${response.code()}"))
             }
-        } catch (e: Exception) {
-            emit(Result.Error("Network error: ${e.message}"))
-        }
-    }
-    
+
     override fun deleteCustomer(customerId: String): Flow<Result<Boolean>> = flow {
         try {
             val response = api.deleteCustomer(customerId)

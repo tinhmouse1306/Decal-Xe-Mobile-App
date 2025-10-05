@@ -17,4 +17,5 @@ interface OrderRepository {
     fun deleteOrder(orderId: String): Flow<Result<Boolean>>
     fun getOrderDetails(orderId: String): Flow<Result<List<OrderDetail>>>
     fun getOrderStageHistory(orderId: String): Flow<Result<List<OrderStageHistory>>>
+    fun updateOrderStatus(orderId: String, status: String, stage: String): Flow<Result<Order>>
 }

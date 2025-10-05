@@ -8,34 +8,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun HomeScreen(
-    onNavigateToLogin: () -> Unit
-) {
+fun HomeScreen(onNavigateToLogin: () -> Unit) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            modifier = Modifier.fillMaxSize().padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = "Chào mừng đến với DecalXe",
-            style = MaterialTheme.typography.headlineMedium
-        )
-        
+        Text(text = "Chào mừng đến với DecalXe", style = MaterialTheme.typography.headlineMedium)
+
         Spacer(modifier = Modifier.height(32.dp))
-        
+
         Text(
-            text = "Ứng dụng quản lý dịch vụ dán decal xe",
-            style = MaterialTheme.typography.bodyLarge
+                text = "Ứng dụng quản lý dịch vụ dán decal xe",
+                style = MaterialTheme.typography.bodyLarge
         )
-        
+
         Spacer(modifier = Modifier.height(48.dp))
-        
-        Button(
-            onClick = onNavigateToLogin,
-            modifier = Modifier.fillMaxWidth()
-        ) {
+
+        Button(onClick = onNavigateToLogin, modifier = Modifier.fillMaxWidth()) {
             Text("Đăng xuất")
         }
     }

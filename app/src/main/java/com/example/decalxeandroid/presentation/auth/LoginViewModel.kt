@@ -9,18 +9,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
-    
+
     private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState.Initial)
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
-    
+
     fun login(username: String, password: String) {
         viewModelScope.launch {
             _uiState.value = LoginUiState.Loading
-            
+
             try {
                 // Use GlobalAuthManager instead of direct LoginUseCase
                 val result = GlobalAuthManager.login(username, password)
-                
+
                 when (result) {
                     is com.example.decalxeandroid.domain.model.AuthResult.Success -> {
                         _uiState.value = LoginUiState.Success(result.user)
@@ -37,7 +37,7 @@ class LoginViewModel : ViewModel() {
             }
         }
     }
-    
+
     fun resetState() {
         _uiState.value = LoginUiState.Initial
     }

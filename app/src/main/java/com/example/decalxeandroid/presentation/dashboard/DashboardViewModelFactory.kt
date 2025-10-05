@@ -5,16 +5,18 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.decalxeandroid.di.AppContainer
 
 class DashboardViewModelFactory : ViewModelProvider.Factory {
-    
+
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DashboardViewModel::class.java)) {
             return DashboardViewModel(
-                AppContainer.orderRepository,
-                AppContainer.customerRepository,
-                AppContainer.customerVehicleRepository,
-                AppContainer.decalServiceRepository
-            ) as T
+                    AppContainer.orderRepository,
+                    AppContainer.customerRepository,
+                    AppContainer.customerVehicleRepository,
+                    AppContainer.decalServiceRepository,
+                    AppContainer.employeeRepository
+            ) as
+                    T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

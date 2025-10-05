@@ -14,32 +14,22 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun DecalXeApp() {
     val navController = rememberNavController()
-    
-    NavHost(
-        navController = navController,
-        startDestination = "login"
-    ) {
-        composable("login") {
-            LoginScreen(navController = navController)
-        }
-        composable("home") {
-            HomeScreen(navController = navController)
-        }
+
+    NavHost(navController = navController, startDestination = "login") {
+        composable("login") { LoginScreen(navController = navController) }
+        composable("home") { HomeScreen(navController = navController) }
     }
 }
 
 @Composable
 @Suppress("UNUSED_PARAMETER")
 fun LoginScreen(navController: androidx.navigation.NavController) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
+    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Text(
-            text = "DecalXe Login Screen",
-            style = MaterialTheme.typography.headlineMedium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxSize()
+                text = "DecalXe Login Screen",
+                style = MaterialTheme.typography.headlineMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxSize()
         )
     }
 }
@@ -47,15 +37,12 @@ fun LoginScreen(navController: androidx.navigation.NavController) {
 @Composable
 @Suppress("UNUSED_PARAMETER")
 fun HomeScreen(navController: androidx.navigation.NavController) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
+    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Text(
-            text = "DecalXe Home Screen",
-            style = MaterialTheme.typography.headlineMedium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxSize()
+                text = "DecalXe Home Screen",
+                style = MaterialTheme.typography.headlineMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxSize()
         )
     }
 }
